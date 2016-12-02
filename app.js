@@ -14,7 +14,7 @@ function H1 (props){
   return <h1>Hello, {props.name}</h1>;
 }
 
-const element = <H1 name="Rodrigo" />;
+const element = <H1 name="Rodrigo Vowqdhsafjkhsadfsdargas" />;
 
 ReactDOM.render(
   element,

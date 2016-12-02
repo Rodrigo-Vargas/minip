@@ -13,13 +13,14 @@ module.exports = {
   module: {
     loaders: [
       {
-        test: /.jsx?$/,
-        loader: 'babel-loader',
-        exclude: /node_modules/,
-        query: {
+        test: /\.jsx?$/,
+        exclude: /node_modules/, 
+        loader: "babel", 
+        query:
+        {
           presets: ['es2015', 'react']
-        }
-      }
+        }  
+      }      
     ]
   }
 };
