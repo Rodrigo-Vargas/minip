@@ -37,7 +37,6 @@ class List extends React.Component {
   }
 
   render(){
-    console.log(this.state.listItems);
     const listItems = this.state.listItems.map((item) =>
       <li key={item.id}>
         { item.name }
