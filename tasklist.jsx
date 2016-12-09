@@ -9,16 +9,30 @@ const taskListTarget = {
     var item = monitor.getItem();
     
     var listItems = component.state.listItems;
-    item.id = props.listItems.length + 1;
-    listItems.push(item)
-    component.setState( { listItems : listItems } );    
+    var newItem = { 
+                    id : props.listItems.length + 1,
+                    name : item.name,
+                    parentList : item.parentList
+                  };
+
+    listItems.push(newItem)
+    component.setState( { listItems : listItems } );  
+
+    return { moved: true };
+  },
+  canDrop: function(props, monitor) {
+    var sourceList = monitor.getItem().parentList;
+    var targetList = props.name;
+
+    return sourceList !=  targetList;
   }
 };
 
 function collect(connect, monitor) {
   return {
     connectDropTarget: connect.dropTarget(),
-    isOver: monitor.isOver()
+    isOver: monitor.isOver(),
+    canDrop: monitor.canDrop()
   };
 }
 
@@ -27,6 +41,7 @@ class TaskList extends React.Component {
     x: PropTypes.number.isRequired,
     y: PropTypes.number.isRequired,
     isOver: PropTypes.bool.isRequired,
+    canDrop: PropTypes.bool.isRequired,
     listItems: PropTypes.array
   }
 
@@ -73,35 +88,32 @@ class TaskList extends React.Component {
     var connectDropTarget = this.props.connectDropTarget;
 
     const listItems = this.state.listItems.map((item) =>
-      <Task key={item.id} item={item} onDelete={this.onItemDelete.bind(this)} />
+      <Task key={item.id} id={item.id} name={item.name} parentList={this.state.name} onDelete={this.onItemDelete.bind(this)} />
     );
 
     var isOver = this.props.isOver;
-
+    var canDrop = this.props.canDrop;
+    
     return connectDropTarget(
-      <div style={{
-        width: '100%',
-        height: '100%'
-      }}>
-        <div className="list">
-          <h3>{this.state.name}</h3>
-          <ul className="items">
-            { listItems}
-          </ul>
-          <div className="form-group">
-            <input className="form-control" value={this.state.newItemDescription} onChange={this.onNewItemChange} />
-          </div>
-
-          <a className="btn btn-default" onClick={this.add}>Add Item</a>
+      <div className="list">
+        <h3>{this.state.name}</h3>
+        <ul className="items">
+          { listItems}
+        </ul>
+        <div className="form-group">
+          <input className="form-control" value={this.state.newItemDescription} onChange={this.onNewItemChange} />
         </div>
+
+        <a className="btn btn-default" onClick={this.add}>Add Item</a>
         {isOver &&
-          <div style={{
-            height: '100%',
-            width: '100%',
-            zIndex: 1,
-            opacity: 0.5,
-            backgroundColor: 'yellow',
-          }} />
+          <div>
+            <span>The card will be moved to here!</span>
+          </div>
+        }
+        {canDrop &&
+          <div>
+            <span>Can drop.</span>
+          </div>
         }
       </div>
     );

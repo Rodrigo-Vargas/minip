@@ -2,7 +2,9 @@
   background-color: #e2e4e6;
   border-radius: 5px;
   display: inline-block;
+  margin: 0 10px;
   padding: 5px;
+  vertical-align: top;
   width: 200px;
 }
 

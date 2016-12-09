@@ -5,11 +5,11 @@ var ItemTypes = require('./constants.jsx').ItemTypes;
 
 const taskSource = {
   beginDrag(props){
-    return props.item;
+    return props;
   },
-  endDrag(props){
-    console.log(props);
-    props.onDelete(props.item.id);
+  endDrag(props, monitor){
+    if (monitor.getDropResult())
+      props.onDelete(props.id);
   }
 };
 
@@ -28,11 +28,16 @@ class Task extends React.Component {
 
   constructor(props){
     super(props);
+    this.state = {
+      parentList: props.parentList,
+      id: props.id,
+      name: props.name
+    }
     this.onDelete = this.onDelete.bind(this);
   }
 
   onDelete(){
-    this.props.onDelete(this.props.item.id);
+    this.props.onDelete(this.props.id);
   }
 
   render() {
@@ -41,7 +46,7 @@ class Task extends React.Component {
 
    return connectDragSource(
      <li className="item">
-        <span>{this.props.item.name}</span>
+        <span>{this.props.name}</span>
         <a onClick={this.onDelete}>X</a>
       </li>
     )
